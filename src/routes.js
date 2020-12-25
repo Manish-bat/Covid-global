@@ -1,12 +1,33 @@
-var express = require("express");
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const axios = require('axios');
 
-router.get("/", function(req, res) {
-	res.send("Hello Manish")
+// Home page route.
+router.get('/', (req, res) => {
+  const apiUrl = "https://api.covid19api.com/summary";
+  axios.get(apiUrl).then((response) => {
+      res.render("home", {
+        appName: "My COVID-19 Tracker",
+        pageName: "COVID-19 Cases",
+        data: response.data,
+      });
+    })
+    .catch(function (err) {
+      res.render("home", {
+        appName: "My COVID-19 Tracker",
+        pageName: "COVID-19 Cases",
+        data: null,
+        error: err,
+      });
+    });
 });
 
-router.get("/about", function(req, res) {
-	res.send("About this covid")
+// About page route.
+router.get('/about', function (req, res) {
+  res.render("about", {
+    appName: "My COVID-19 Tracker",
+    pageName: "About",
+  });
 });
 
 module.exports = router;
